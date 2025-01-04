@@ -205,10 +205,21 @@
     </footer>
 
     <script>
-        // Restrict the input to digits and line breaks
+        // Restrict the input to digits and line breaks, ensuring each line is no longer than 6 digits
         function validateBinsInput(textarea) {
-            // Replace non-numeric characters with an empty string
-            textarea.value = textarea.value.replace(/[^\d\n]/g, '');
+            // Get the textarea value
+            let value = textarea.value;
+            
+            // Replace any non-numeric characters with an empty string
+            value = value.replace(/[^\d\n]/g, '');
+
+            // Ensure each line doesn't exceed 6 digits and only digits or new lines are allowed
+            let lines = value.split('\n');
+            lines = lines.map(line => line.slice(0, 6));  // Limit each line to 6 digits
+            value = lines.join('\n');  // Rejoin the lines with new line separators
+
+            // Set the textarea value to the validated input
+            textarea.value = value;
         }
 
         function selectPaymentMethod(method) {

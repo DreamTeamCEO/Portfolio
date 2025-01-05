@@ -201,34 +201,38 @@
 
     <!-- Content -->
     <div class="container">
-        <div class="order-form">
-            <h2>Order Your Bins or Country Cards</h2>
-            <form id="orderForm">
-                <textarea id="bins" placeholder="Enter bins here, one per line." rows="8" oninput="validateBinsInput(this)"></textarea>
-                
-                <!-- Country Code Dropdown Wrapper for Centering -->
-                <div class="select-country-container">
-                    <label for="countryCode">Or select a 2-letter country code:</label>
-                    <select id="countryCode">
-                        <option value=""> Select Country </option>
-                    </select>
-                </div>
+    <div class="order-form">
+        <h2>Order Your Bins or Country Cards</h2>
+        <p style="color: #32cd32; font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">
+    Visa bins are always £2
+</p>
+        <form id="orderForm">
+            <textarea id="bins" placeholder="Enter bins here, one per line." rows="8" oninput="validateBinsInput(this)"></textarea>
+            
+            <!-- Country Code Dropdown Wrapper for Centering -->
+            <div class="select-country-container">
+                <label for="countryCode">Or select a 2-letter country code:</label>
+                <select id="countryCode">
+                    <option value=""> Select Country </option>
+                </select>
+            </div>
 
-                <input type="number" id="cardAmount" placeholder="Enter the number of cards" min="1" required>
-                <input type="text" id="telegramUsername" placeholder="Your Telegram Username" required>
+            <input type="number" id="cardAmount" placeholder="Enter the number of cards" min="1" required>
+            <input type="text" id="telegramUsername" placeholder="Your Telegram Username" required>
 
-                <!-- Hidden Input for Payment Method -->
-                <input type="hidden" id="paymentMethod" name="paymentMethod">
-                
-                <div class="payment-buttons">
-                    <div class="payment-button" id="btcBtn" onclick="selectPaymentMethod('BTC')">BTC</div>
-                    <div class="payment-button" id="paypalBtn" onclick="selectPaymentMethod('PayPal')">PayPal</div>
-                </div>
+            <!-- Hidden Input for Payment Method -->
+            <input type="hidden" id="paymentMethod" name="paymentMethod">
+            
+            <div class="payment-buttons">
+                <div class="payment-button" id="btcBtn" onclick="selectPaymentMethod('BTC')">BTC</div>
+                <div class="payment-button" id="paypalBtn" onclick="selectPaymentMethod('PayPal')">PayPal</div>
+            </div>
 
-                <button type="submit" class="join-btn">Submit Order</button>
-            </form>
-        </div>
+            <button type="submit" class="join-btn">Submit Order</button>
+        </form>
     </div>
+</div>
+
 
     <!-- Footer -->
     <footer>

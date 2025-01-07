@@ -207,6 +207,7 @@
             <a href="#team" class="nav-link">Team Roster</a>
             <a href="#become-dropper" class="nav-link">Become a Dropper</a>
             <a href="order-bins.html" class="nav-link">Order Bins</a>
+            <a href="hot-bins.html" class="nav-link">Hot Bins</a>
         </nav>
     </header>
 
@@ -302,8 +303,10 @@
     // Smooth scrolling behavior, with improved offset based on section title position
     document.querySelectorAll('.nav-menu a').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        // Exclude "Order Bins" from the smooth scroll handling
-        if (this.getAttribute('href') === "order-bins.html") return;
+    // Only handle smooth scroll for internal links (sections)
+    if (this.getAttribute('href').endsWith('.html') && !this.getAttribute('href').startsWith('#')) {
+        return; // Skip smooth scroll for external or file links
+    }
 
         e.preventDefault();
         const targetSection = document.querySelector(this.getAttribute('href'));

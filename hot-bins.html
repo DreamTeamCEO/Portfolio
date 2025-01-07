@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot Bins - DreamTeam Drops</title>
+
+    <link rel="icon" href="dreamteam.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="dreamteam.ico">
+    <link rel="icon" type="image/png" sizes="192x192" href="dreamteam.ico">
+    <link rel="manifest" href="/manifest.json">
+
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #fff;
+            text-align: center;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4caf50, #00bcd4);
+            padding: 20px 15px;
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        header p {
+            margin-top: 5px;
+            font-size: 1rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .country-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .country-button {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            font-size: 1.2rem;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .country-button:hover {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .info-box {
+            display: none;
+            background: #1c1c1c;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin-top: 20px;
+            text-align: left;
+            position: relative;
+        }
+
+        .back-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #4caf50;  /* Green background */
+    color: #fff;
+    font-size: 1.2rem;  /* Smaller text */
+    width: 30px;        /* Make it a circle */
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Make it circular */
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    padding: 0;  /* Remove default padding */
+}
+
+.back-button:hover {
+    background: #00bcd4;  /* Change background on hover */
+}
+
+.back-button:focus {
+    outline: none; /* Remove the outline when focused */
+}
+
+.back-button span {
+    font-size: 1.6rem; /* Bigger font size for the X */
+}
+
+
+        footer {
+            background: #1c1c1c;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>DreamTeam Drops</h1>
+        <p>Hot Bins</p>
+        <nav class="nav-menu">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="order-bins.html" class="nav-link">Order Bins</a>
+        </nav>
+    </header>
+
+    <!-- Content -->
+    <div class="container">
+        <div class="country-buttons" id="countryButtonsContainer">
+            <!-- Buttons will be added dynamically here -->
+        </div>
+
+        <div class="info-box" id="infoBox">
+    <button class="back-button" id="backButton"><span>X</span></button>
+    <h2 id="infoBoxTitle">Hot Bins</h2>
+    <p id="infoBoxContent">Loading hot bins information...</p>
+</div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 DreamTeam Drops. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const countryCodes = [
+    "AD🇦🇩", "AE🇦🇪", "AF🇦🇫", "AG🇦🇬", "AI🇦🇮", "AL🇦🇱", "AM🇦🇲", "AO🇦🇴", "AQ🇦🇶", "AR🇦🇷", "AS🇦🇸", "AT🇦🇹", "AU🇦🇺", "AW🇦🇼", "AX", "AZ🇦🇿",
+    "BA🇧🇦", "BB🇧🇧", "BD🇧🇩", "BE🇧🇪", "BF🇧🇫", "BG🇧🇬", "BH🇧🇭", "BI🇧🇮", "BJ🇧🇯", "BL", "BM🇧🇲", "BN🇧🇳", "BO🇧🇴", "BQ", "BR🇧🇷", "BS🇧🇸",
+    "BT🇧🇹", "BV🇧🇻", "BW🇧🇼", "BY🇧🇾", "BZ🇧🇿", "CA🇨🇦", "CC", "CD🇨🇩", "CF🇨🇫", "CG🇨🇬", "CH🇨🇭", "CI🇨🇮", "CK🇨🇰", "CL🇨🇱", "CM🇨🇲", "CN🇨🇳",
+    "CO🇨🇴", "CR🇨🇷", "CU🇨🇺", "CV🇨🇻", "CW🇨🇼", "CX🇨🇽", "CY🇨🇾", "CZ🇨🇿", "DE🇩🇪", "DJ🇩🇯", "DK🇩🇰", "DM🇩🇲", "DO🇩🇴", "DZ🇩🇿", "EC🇪🇨", "EE🇪🇪",
+    "EG🇪🇬", "EH🇪🇭", "ER🇪🇷", "ES🇪🇸", "ET🇪🇹", "FI🇫🇮", "FJ🇫🇯", "FK🇫🇰", "FM🇫🇲", "FO🇫🇴", "FR🇫🇷", "GA🇬🇦", "GB🇬🇧", "GD🇬🇩", "GE🇬🇪", "GF🇬🇫",
+    "GG🇬🇬", "GH🇬🇭", "GI🇬🇮", "GL🇬🇱", "GM🇬🇲", "GN🇬🇳", "GP🇬🇵", "GQ🇬🇶", "GR🇬🇷", "GS", "GT🇬🇹", "GU🇬🇺", "GW🇬🇼", "GY🇬🇾", "HK🇭🇰", "HM",
+    "HN🇭🇳", "HR🇭🇷", "HT🇭🇹", "HU🇭🇺", "ID🇮🇩", "IE🇮🇪", "IL🇮🇱", "IM🇮🇲", "IN🇮🇳", "IO🇮🇴", "IQ🇮🇶", "IR🇮🇷", "IS🇮🇸", "IT🇮🇹", "JE🇯🇪", "JM🇯🇲",
+    "JO🇯🇴", "JP🇯🇵", "KE🇰🇪", "KG🇰🇬", "KH🇰🇭", "KI🇰🇮", "KM🇰🇲", "KN🇰🇳", "KP🇰🇵", "KR🇰🇷", "KW🇰🇼", "KY🇰🇾", "KZ🇰🇿", "LA🇱🇦", "LB🇱🇧", "LC🇱🇨",
+    "LI🇱🇮", "LK🇱🇰", "LR🇱🇷", "LS🇱🇸", "LT🇱🇹", "LU🇱🇺", "LV🇱🇻", "LY🇱🇾", "MA🇲🇦", "MC🇲🇨", "MD🇲🇩", "ME🇲🇪", "MF", "MG🇲🇬", "MH🇲🇭", "MK🇲🇰",
+    "ML🇲🇱", "MM🇲🇲", "MN🇲🇳", "MO🇲🇴", "MP🇲🇵", "MQ🇲🇶", "MR🇲🇷", "MS🇲🇸", "MT🇲🇹", "MU🇲🇺", "MV🇲🇻", "MW🇲🇼", "MX🇲🇽", "MY🇲🇾", "MZ🇲🇿", "NA🇳🇦",
+    "NC", "NE🇳🇪", "NF🇳🇫", "NG🇳🇬", "NI🇳🇮", "NL🇳🇱", "NO🇳🇴", "NP🇳🇵", "NR🇳🇷", "NU🇳🇺", "NZ🇳🇿", "OM🇴🇲", "PA🇵🇦", "PE🇵🇪", "PF🇵🇫", "PG🇵🇬",
+    "PH🇵🇭", "PK🇵🇰", "PL🇵🇱", "PM", "PN🇵🇳", "PR🇵🇷", "PS🇵🇸", "PT🇵🇹", "PW🇵🇼", "PY🇵🇾", "QA🇶🇦", "RE", "RO🇷🇴", "RS🇷🇸", "RU🇷🇺", "RW🇷🇼",
+    "SA🇸🇦", "SB🇸🇧", "SC🇸🇨", "SD🇸🇩", "SE🇸🇪", "SG🇸🇬", "SH🇸🇭", "SI🇸🇮", "SJ", "SK🇸🇰", "SL🇸🇱", "SM🇸🇲", "SN🇸🇳", "SO🇸🇴", "SR🇸🇷", "SS🇸🇸",
+    "ST🇸🇹", "SV🇸🇻", "SX🇸🇽", "SY🇸🇾", "SZ🇸🇿", "TC", "TD🇹🇩", "TF", "TG🇹🇬", "TH🇹🇭", "TJ🇹🇯", "TK🇹🇰", "TL🇹🇱", "TM🇹🇲", "TN🇹🇳", "TO🇹🇴",
+    "TR🇹🇷", "TT🇹🇹", "TV🇹🇻", "TW🇹🇼", "TZ🇹🇿", "UA🇺🇦", "UG🇺🇬", "US🇺🇸", "UY🇺🇾", "UZ🇺🇿", "VA🇻🇦", "VC🇻🇨", "VE🇻🇪", "VG", "VI🇻🇮", "VN🇻🇳", 
+    "VU🇻🇺", "WF", "WS🇼🇸", "YE🇾🇪", "YT", "ZA🇿🇦", "ZM🇿🇲", "ZW🇿🇼"
+];
+
+        const countryButtonsContainer = document.getElementById("countryButtonsContainer");
+        const infoBox = document.getElementById("infoBox");
+        const backButton = document.getElementById("backButton");
+        const infoBoxTitle = document.getElementById("infoBoxTitle");
+        const infoBoxContent = document.getElementById("infoBoxContent");
+
+        // Placeholder hot bins data for each country
+        const hotBinsData = {
+    "AD🇦🇩": "Hot bins for Andorra: ",
+    "AE🇦🇪": "Hot bins for United Arab Emirates: ",
+    "AF🇦🇫": "Hot bins for Afghanistan: ",
+    "AG🇦🇬": "Hot bins for Antigua and Barbuda: ",
+    "AI": "Hot bins for Anguilla: ",
+    "AL🇦🇱": "Hot bins for Albania: ",
+    "AM🇦🇲": "Hot bins for Armenia: ",
+    "AO🇦🇴": "Hot bins for Angola: ",
+    "AQ": "Hot bins for Antarctica: ",
+    "AR🇦🇷": "Hot bins for Argentina: ",
+    "AS": "Hot bins for American Samoa: ",
+    "AT🇦🇹": "Hot bins for Austria: ",
+    "AU🇦🇺": "Hot bins for Australia: ",
+    "AW🇦🇼": "Hot bins for Aruba: ",
+    "AX": "Hot bins for Åland Islands: ",
+    "AZ🇦🇿": "Hot bins for Azerbaijan: ",
+    "BA🇧🇦": "Hot bins for Bosnia and Herzegovina: ",
+    "BB🇧🇧": "Hot bins for Barbados: ",
+    "BD🇧🇩": "Hot bins for Bangladesh: ",
+    "BE🇧🇪": "Hot bins for Belgium: ",
+    "BF🇧🇫": "Hot bins for Burkina Faso: ",
+    "BG🇧🇬": "Hot bins for Bulgaria: ",
+    "BH🇧🇭": "Hot bins for Bahrain: ",
+    "BI🇧🇮": "Hot bins for Burundi: ",
+    "BJ🇧🇯": "Hot bins for Benin: ",
+    "BL": "Hot bins for Saint Barthélemy: ",
+    "BM🇧🇲": "Hot bins for Bermuda: ",
+    "BN🇧🇳": "Hot bins for Brunei: ",
+    "BO🇧🇴": "Hot bins for Bolivia: ",
+    "BQ": "Hot bins for Bonaire, Sint Eustatius and Saba: ",
+    "BR🇧🇷": "Hot bins for Brazil: ",
+    "BS🇧🇸": "Hot bins for Bahamas: ",
+    "BT🇧🇹": "Hot bins for Bhutan: ",
+    "BV": "Hot bins for Bouvet Island: ",
+    "BW🇧🇼": "Hot bins for Botswana: ",
+    "BY🇧🇾": "Hot bins for Belarus: ",
+    "BZ🇧🇿": "Hot bins for Belize: ",
+    "CA🇨🇦": "Hot bins for Canada: ",
+    "CC🇨🇨": "Hot bins for Cocos (Keeling) Islands: ",
+    "CD🇨🇩": "Hot bins for Democratic Republic of the Congo: ",
+    "CF🇨🇫": "Hot bins for Central African Republic: ",
+    "CG🇨🇬": "Hot bins for Republic of the Congo: ",
+    "CH🇨🇭": "Hot bins for Switzerland: ",
+    "CI🇨🇮": "Hot bins for Côte d'Ivoire: ",
+    "CK🇨🇰": "Hot bins for Cook Islands: ",
+    "CL🇨🇱": "Hot bins for Chile: ",
+    "CM🇨🇲": "Hot bins for Cameroon: ",
+    "CN🇨🇳": "Hot bins for China: ",
+    "CO🇨🇴": "Hot bins for Colombia: ",
+    "CR🇨🇷": "Hot bins for Costa Rica: ",
+    "CU🇨🇺": "Hot bins for Cuba: ",
+    "CV🇨🇻": "Hot bins for Cape Verde: ",
+    "CW🇨🇼": "Hot bins for Curaçao: ",
+    "CX🇨🇽": "Hot bins for Christmas Island: ",
+    "CY🇨🇾": "Hot bins for Cyprus: ",
+    "CZ🇨🇿": "Hot bins for Czech Republic: ",
+    "DE🇩🇪": "Hot bins for Germany: ",
+    "DJ🇩🇯": "Hot bins for Djibouti: ",
+    "DK🇩🇰": "Hot bins for Denmark: ",
+    "DM🇩🇲": "Hot bins for Dominica: ",
+    "DO🇩🇴": "Hot bins for Dominican Republic: ",
+    "DZ🇩🇿": "Hot bins for Algeria: ",
+    "EC🇪🇨": "Hot bins for Ecuador: ",
+    "EE🇪🇪": "Hot bins for Estonia: ",
+    "EG🇪🇬": "Hot bins for Egypt: ",
+    "EH🇪🇭": "Hot bins for Western Sahara: ",
+    "ER🇪🇷": "Hot bins for Eritrea: ",
+    "ES🇪🇸": "Hot bins for Spain: ",
+    "ET🇪🇹": "Hot bins for Ethiopia: ",
+    "FI🇫🇮": "Hot bins for Finland: ",
+    "FJ🇫🇯": "Hot bins for Fiji: ",
+    "FK🇫🇰": "Hot bins for Falkland Islands: ",
+    "FM🇫🇲": "Hot bins for Federated States of Micronesia: ",
+    "FO🇫🇴": "Hot bins for Faroe Islands: ",
+    "FR🇫🇷": "Hot bins for France: ",
+    "GA🇬🇦": "Hot bins for Gabon: ",
+    "GB🇬🇧": "Hot bins for United Kingdom: ",
+    "GD🇬🇩": "Hot bins for Grenada: ",
+    "GE🇬🇪": "Hot bins for Georgia: ",
+    "GF🇬🇫": "Hot bins for French Guiana: ",
+    "GG🇬🇬": "Hot bins for Guernsey: ",
+    "GH🇬🇭": "Hot bins for Ghana: ",
+    "GI🇬🇮": "Hot bins for Gibraltar: ",
+    "GL🇬🇱": "Hot bins for Greenland: ",
+    "GM🇬🇲": "Hot bins for Gambia: ",
+    "GN🇬🇳": "Hot bins for Guinea: ",
+    "GP🇬🇵": "Hot bins for Guadeloupe: ",
+    "GQ🇬🇶": "Hot bins for Equatorial Guinea: ",
+    "GR🇬🇷": "Hot bins for Greece: ",
+    "GS🇬🇸": "Hot bins for South Georgia and the South Sandwich Islands: ",
+    "GT🇬🇹": "Hot bins for Guatemala: ",
+    "GU🇬🇺": "Hot bins for Guam: ",
+    "GW🇬🇼": "Hot bins for Guinea-Bissau: ",
+    "GY🇬🇾": "Hot bins for Guyana: ",
+    "HK🇭🇰": "Hot bins for Hong Kong: ",
+    "HM🇭🇲": "Hot bins for Heard Island and McDonald Islands: ",
+    "HN🇭🇳": "Hot bins for Honduras: ",
+    "HR🇭🇷": "Hot bins for Croatia: ",
+    "HT🇭🇹": "Hot bins for Haiti: ",
+    "HU🇭🇺": "Hot bins for Hungary: ",
+    "ID🇮🇩": "Hot bins for Indonesia: ",
+    "IE🇮🇪": "Hot bins for Ireland: ",
+    "IL🇮🇱": "Hot bins for Israel: ",
+    "IM🇮🇲": "Hot bins for Isle of Man: ",
+    "IN🇮🇳": "Hot bins for India: ",
+    "IO🇮🇴": "Hot bins for British Indian Ocean Territory: ",
+    "IQ🇮🇶": "Hot bins for Iraq: ",
+    "IR🇮🇷": "Hot bins for Iran: ",
+    "IS🇮🇸": "Hot bins for Iceland: ",
+    "IT🇮🇹": "Hot bins for Italy: ",
+    "JE🇯🇪": "Hot bins for Jersey: ",
+    "JM🇯🇲": "Hot bins for Jamaica: ",
+    "JO🇯🇴": "Hot bins for Jordan: ",
+    "JP🇯🇵": "Hot bins for Japan: ",
+    "KE🇰🇪": "Hot bins for Kenya: ",
+    "KG🇰🇬": "Hot bins for Kyrgyzstan: ",
+    "KH🇰🇭": "Hot bins for Cambodia: ",
+    "KI🇰🇮": "Hot bins for Kiribati: ",
+    "KM🇰🇾": "Hot bins for Comoros: ",
+    "KN🇰🇳": "Hot bins for Saint Kitts and Nevis: ",
+    "KP🇰🇵": "Hot bins for North Korea: ",
+    "KR🇰🇷": "Hot bins for South Korea: ",
+    "KW🇰🇼": "Hot bins for Kuwait: ",
+    "KY🇰🇾": "Hot bins for Cayman Islands: ",
+    "KZ🇰🇿": "Hot bins for Kazakhstan: ",
+    "LA🇱🇦": "Hot bins for Laos: ",
+    "LB🇱🇧": "Hot bins for Lebanon: ",
+    "LC🇱🇨": "Hot bins for Saint Lucia: ",
+    "LI🇱🇮": "Hot bins for Liechtenstein: ",
+    "LK🇱🇰": "Hot bins for Sri Lanka: ",
+    "LR🇱🇷": "Hot bins for Liberia: ",
+    "LS🇱🇸": "Hot bins for Lesotho: ",
+    "LT🇱🇹": "Hot bins for Lithuania: ",
+    "LU🇱🇺": "Hot bins for Luxembourg: ",
+    "LV🇱🇻": "Hot bins for Latvia: ",
+    "LY🇱🇾": "Hot bins for Libya: ",
+    "MA🇲🇦": "Hot bins for Morocco: ",
+    "MC🇲🇨": "Hot bins for Monaco: ",
+    "MD🇲🇩": "Hot bins for Moldova: ",
+    "ME🇲🇪": "Hot bins for Montenegro: ",
+    "MF🇲🇫": "Hot bins for Saint Martin: ",
+    "MG🇲🇬": "Hot bins for Madagascar: ",
+    "MH🇲🇭": "Hot bins for Marshall Islands: ",
+    "MK🇲🇰": "Hot bins for North Macedonia: ",
+    "ML🇲🇱": "Hot bins for Mali: ",
+    "MM🇲🇲": "Hot bins for Myanmar: ",
+    "MN🇲🇳": "Hot bins for Mongolia: ",
+    "MO🇲🇴": "Hot bins for Macau: ",
+    "MP🇲🇵": "Hot bins for Northern Mariana Islands: ",
+    "MQ🇲🇶": "Hot bins for Martinique: ",
+    "MR🇲🇷": "Hot bins for Mauritania: ",
+    "MS🇲🇸": "Hot bins for Montserrat: ",
+    "MT🇲🇹": "Hot bins for Malta: ",
+    "MU🇲🇺": "Hot bins for Mauritius: ",
+    "MV🇲🇻": "Hot bins for Maldives: ",
+    "MW🇲🇼": "Hot bins for Malawi: ",
+    "MX🇲🇽": "Hot bins for Mexico: ",
+    "MY🇲🇾": "Hot bins for Malaysia: ",
+    "MZ🇲🇿": "Hot bins for Mozambique: ",
+    "NA🇳🇦": "Hot bins for Namibia: ",
+    "NC🇳🇨": "Hot bins for New Caledonia: ",
+    "NE🇳🇪": "Hot bins for Niger: ",
+    "NF🇳🇫": "Hot bins for Norfolk Island: ",
+    "NG🇳🇬": "Hot bins for Nigeria: ",
+    "NI🇳🇮": "Hot bins for Nicaragua: ",
+    "NL🇳🇱": "Hot bins for Netherlands: ",
+    "NO🇳🇴": "Hot bins for Norway: ",
+    "NP🇳🇵": "Hot bins for Nepal: ",
+    "NR🇳🇷": "Hot bins for Nauru: ",
+    "NU🇳🇺": "Hot bins for Niue: ",
+    "NZ🇳🇿": "Hot bins for New Zealand: ",
+    "OM🇴🇲": "Hot bins for Oman: ",
+    "PA🇵🇦": "Hot bins for Panama: ",
+    "PE🇵🇪": "Hot bins for Peru: ",
+    "PF🇵🇫": "Hot bins for French Polynesia: ",
+    "PG🇵🇬": "Hot bins for Papua New Guinea: ",
+    "PH🇵🇭": "Hot bins for Philippines: ",
+    "PK🇵🇰": "Hot bins for Pakistan: ",
+    "PL🇵🇱": "Hot bins for Poland: ",
+    "PM🇵🇲": "Hot bins for Saint Pierre and Miquelon: ",
+    "PN🇵🇳": "Hot bins for Pitcairn Islands: ",
+    "PR🇵🇷": "Hot bins for Puerto Rico: ",
+    "PT🇵🇹": "Hot bins for Portugal: ",
+    "PW🇵🇼": "Hot bins for Palau: ",
+    "PY🇵🇾": "Hot bins for Paraguay: ",
+    "QA🇶🇦": "Hot bins for Qatar: ",
+    "RE🇷🇪": "Hot bins for Réunion: ",
+    "RO🇷🇴": "Hot bins for Romania: ",
+    "RS🇷🇸": "Hot bins for Serbia: ",
+    "RU🇷🇺": "Hot bins for Russia: ",
+    "RW🇷🇼": "Hot bins for Rwanda: ",
+    "SA🇸🇦": "Hot bins for Saudi Arabia: ",
+    "SB🇸🇧": "Hot bins for Solomon Islands: ",
+    "SC🇸🇨": "Hot bins for Seychelles: ",
+    "SD🇸🇩": "Hot bins for Sudan: ",
+    "SE🇸🇪": "Hot bins for Sweden: ",
+    "SG🇸🇬": "Hot bins for Singapore: ",
+    "SH🇸🇭": "Hot bins for Saint Helena: ",
+    "SI🇸🇮": "Hot bins for Slovenia: ",
+    "SJ🇸🇯": "Hot bins for Svalbard and Jan Mayen: ",
+    "SK🇸🇰": "Hot bins for Slovakia: ",
+    "SL🇸🇱": "Hot bins for Sierra Leone: ",
+    "SM🇸🇲": "Hot bins for San Marino: ",
+    "SN🇸🇳": "Hot bins for Senegal: ",
+    "SO🇸🇴": "Hot bins for Somalia: ",
+    "SR🇸🇷": "Hot bins for Suriname: ",
+    "SS🇸🇸": "Hot bins for South Sudan: ",
+    "ST🇸🇹": "Hot bins for São Tomé and Príncipe: ",
+    "SV🇸🇻": "Hot bins for El Salvador: ",
+    "SX🇸🇽": "Hot bins for Sint Maarten: ",
+    "SY🇸🇾": "Hot bins for Syria: ",
+    "SZ🇸🇿": "Hot bins for Eswatini: ",
+    "TC🇹🇨": "Hot bins for Turks and Caicos Islands: ",
+    "TD🇹🇩": "Hot bins for Chad: ",
+    "TF🇹🇫": "Hot bins for French Southern and Antarctic Lands: ",
+    "TG🇹🇬": "Hot bins for Togo: ",
+    "TH🇹🇭": "Hot bins for Thailand: ",
+    "TJ🇹🇯": "Hot bins for Tajikistan: ",
+    "TK🇹🇰": "Hot bins for Tokelau: ",
+    "TL🇹🇱": "Hot bins for Timor-Leste: ",
+    "TM🇹🇲": "Hot bins for Turkmenistan: ",
+    "TN🇹🇳": "Hot bins for Tunisia: ",
+    "TO🇹🇴": "Hot bins for Tonga: ",
+    "TR🇹🇷": "Hot bins for Turkey: ",
+    "TT🇹🇹": "Hot bins for Trinidad and Tobago: ",
+    "TV🇹🇻": "Hot bins for Tuvalu: ",
+    "TZ🇹🇿": "Hot bins for Tanzania: ",
+    "UA🇺🇦": "Hot bins for Ukraine: ",
+    "UG🇺🇬": "Hot bins for Uganda: ",
+    "UM🇺🇲": "Hot bins for United States Minor Outlying Islands: ",
+    "US🇺🇸": "Hot bins for United States: ",
+    "UY🇺🇾": "Hot bins for Uruguay: ",
+    "UZ🇺🇿": "Hot bins for Uzbekistan: ",
+    "VA🇻🇦": "Hot bins for Vatican City: ",
+    "VC🇻🇨": "Hot bins for Saint Vincent and the Grenadines: ",
+    "VE🇻🇪": "Hot bins for Venezuela: ",
+    "VG🇻🇬": "Hot bins for British Virgin Islands: ",
+    "VI🇻🇮": "Hot bins for United States Virgin Islands: ",
+    "VN🇻🇳": "Hot bins for Vietnam: ",
+    "VU🇻🇺": "Hot bins for Vanuatu: ",
+    "WF🇼🇫": "Hot bins for Wallis and Futuna: ",
+    "WS🇼🇸": "Hot bins for Samoa: ",
+    "YE🇾🇪": "Hot bins for Yemen: ",
+    "YT🇾🇹": "Hot bins for Mayotte: ",
+    "ZA🇿🇦": "Hot bins for South Africa: ",
+    "ZM🇿🇲": "Hot bins for Zambia: ",
+    "ZW🇿🇼": "Hot bins for Zimbabwe: "
+};
+
+
+        // Add country buttons dynamically
+        countryCodes.forEach(code => {
+            const button = document.createElement("button");
+            button.classList.add("country-button");
+            button.textContent = code;
+            button.onclick = () => showHotBins(code); // Show hot bins for the clicked country
+            countryButtonsContainer.appendChild(button);
+        });
+
+        // Show hot bins for the clicked country
+        function showHotBins(countryCode) {
+            // Hide country buttons
+            countryButtonsContainer.style.display = "none";
+
+            // Show the information box with details about hot bins for the selected country
+            infoBox.style.display = "block";
+            infoBoxTitle.textContent = `Hot Bins for ${countryCode}`;
+            infoBoxContent.textContent = hotBinsData[countryCode] || "Hot bins information for this country is not available.";
+        }
+
+        // Back button to show all country buttons again
+        backButton.onclick = () => {
+            countryButtonsContainer.style.display = "grid";
+            infoBox.style.display = "none";
+        };
+
+    </script>
+</body>
+</html>

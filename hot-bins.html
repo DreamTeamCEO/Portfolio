@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hot Bins - DreamTeam Drops</title>
-
     <link rel="icon" href="dreamteam.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="dreamteam.ico">
     <link rel="icon" type="image/png" sizes="192x192" href="dreamteam.ico">
@@ -71,6 +70,7 @@
         .container {
             flex-grow: 1;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 40px 20px;
@@ -112,42 +112,46 @@
         }
 
         .back-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #4caf50;  /* Green background */
-    color: #fff;
-    font-size: 1.2rem;  /* Smaller text */
-    width: 30px;        /* Make it a circle */
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%; /* Make it circular */
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-    padding: 0;  /* Remove default padding */
-}
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4caf50;
+            color: #fff;
+            font-size: 1.2rem;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+            padding: 0;
+        }
 
-.back-button:hover {
-    background: #00bcd4;  /* Change background on hover */
-}
+        .back-button:hover {
+            background: #00bcd4;
+        }
 
-.back-button:focus {
-    outline: none; /* Remove the outline when focused */
-}
-
-.back-button span {
-    font-size: 1.6rem; /* Bigger font size for the X */
-}
-
+        .back-button span {
+            font-size: 1.6rem;
+        }
 
         footer {
             background: #1c1c1c;
             padding: 20px;
             font-size: 0.9rem;
             color: #999;
+        }
+
+        #countryFilter {
+            width: 80%;
+            padding: 10px;
+            margin: 20px auto;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
@@ -165,15 +169,24 @@
 
     <!-- Content -->
     <div class="container">
+        <!-- Search bar -->
+        <input 
+            type="text" 
+            id="countryFilter" 
+            placeholder="Filter countries..." 
+        />
+
+        <!-- Country buttons container -->
         <div class="country-buttons" id="countryButtonsContainer">
             <!-- Buttons will be added dynamically here -->
         </div>
 
+        <!-- Info box -->
         <div class="info-box" id="infoBox">
-    <button class="back-button" id="backButton"><span>X</span></button>
-    <h2 id="infoBoxTitle">Hot Bins</h2>
-    <p id="infoBoxContent">Loading hot bins information...</p>
-</div>
+            <button class="back-button" id="backButton"><span>X</span></button>
+            <h2 id="infoBoxTitle">Hot Bins</h2>
+            <p id="infoBoxContent">Loading hot bins information...</p>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -201,13 +214,6 @@
     "VU🇻🇺", "WF", "WS🇼🇸", "YE🇾🇪", "YT", "ZA🇿🇦", "ZM🇿🇲", "ZW🇿🇼"
 ];
 
-        const countryButtonsContainer = document.getElementById("countryButtonsContainer");
-        const infoBox = document.getElementById("infoBox");
-        const backButton = document.getElementById("backButton");
-        const infoBoxTitle = document.getElementById("infoBoxTitle");
-        const infoBoxContent = document.getElementById("infoBoxContent");
-
-        // Placeholder hot bins data for each country
         const hotBinsData = {
     "AD🇦🇩": "Hot bins for Andorra: ",
     "AE🇦🇪": "Hot bins for United Arab Emirates: ",
@@ -458,33 +464,44 @@
     "ZW🇿🇼": "Hot bins for Zimbabwe: "
 };
 
+        const countryButtonsContainer = document.getElementById("countryButtonsContainer");
+        const infoBox = document.getElementById("infoBox");
+        const backButton = document.getElementById("backButton");
+        const infoBoxTitle = document.getElementById("infoBoxTitle");
+        const infoBoxContent = document.getElementById("infoBoxContent");
+        const filterInput = document.getElementById("countryFilter");
 
         // Add country buttons dynamically
         countryCodes.forEach(code => {
             const button = document.createElement("button");
             button.classList.add("country-button");
             button.textContent = code;
-            button.onclick = () => showHotBins(code); // Show hot bins for the clicked country
+            button.onclick = () => showHotBins(code); 
             countryButtonsContainer.appendChild(button);
         });
 
-        // Show hot bins for the clicked country
+        // Show hot bins for selected country
         function showHotBins(countryCode) {
-            // Hide country buttons
             countryButtonsContainer.style.display = "none";
-
-            // Show the information box with details about hot bins for the selected country
             infoBox.style.display = "block";
             infoBoxTitle.textContent = `Hot Bins for ${countryCode}`;
-            infoBoxContent.textContent = hotBinsData[countryCode] || "Hot bins information for this country is not available.";
+            infoBoxContent.textContent = hotBinsData[countryCode] || "No data available";
         }
 
-        // Back button to show all country buttons again
+        // Back button functionality
         backButton.onclick = () => {
             countryButtonsContainer.style.display = "grid";
             infoBox.style.display = "none";
         };
 
+        // Filter country buttons
+        filterInput.addEventListener("input", () => {
+            const filterValue = filterInput.value.toLowerCase();
+            const buttons = document.querySelectorAll(".country-button");
+            buttons.forEach(button => {
+                button.style.display = button.textContent.toLowerCase().includes(filterValue) ? "block" : "none";
+            });
+        });
     </script>
 </body>
 </html>
